@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>fireboss. 白手起家</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+<link rel="manifest" href="manifest.json">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{font-family:Georgia,"Songti SC","Noto Serif SC",serif;background:#F5F1E6;color:#1B1B1B;line-height:1.75}
+.mono{font-family:"SF Mono",Menlo,Consolas,"Courier New",monospace}
+#top{max-width:680px;margin:0 auto;padding:56px 22px 8px}
+.eyebrow{font-size:11px;letter-spacing:.45em;color:#8A6A2C;text-transform:uppercase;font-family:Menlo,Consolas,monospace}
+h1{font-size:52px;letter-spacing:-.02em;line-height:1.05;margin:10px 0 4px;color:#1B365D}
+.sub{font-size:19px;color:#444}
+.sub b{color:#1B365D}
+.rule{height:3px;background:#1B365D;margin:18px 0 6px}
+.rule+.meta{font-size:11.5px;color:#666;letter-spacing:.12em;font-family:Menlo,Consolas,monospace}
+.lede{margin:26px 0 0;font-size:15.5px;color:#333;border-left:3px solid #C0392B;padding:2px 0 2px 14px}
+.numbers{max-width:680px;margin:30px auto 0;padding:0 22px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.num{background:#1B365D;color:#F5F1E6;padding:10px 6px 8px;text-align:center;border-radius:3px}
+.num .v{font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:700;letter-spacing:-.02em}
+.num .k{font-size:9.5px;color:#B9C7DB;letter-spacing:.1em;margin-top:2px}
+#wallwrap{max-width:680px;margin:44px auto 0;padding:0 22px}
+#wallwrap h2,.sect h2{font-size:12px;letter-spacing:.3em;color:#8A6A2C;font-family:Menlo,Consolas,monospace;margin-bottom:12px}
+#wall{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}
+.w{aspect-ratio:1.7;border:1px solid #B9A96A;border-radius:3px;display:flex;align-items:center;justify-content:center;background:#FBF8EE;position:relative}
+.w span{font-family:Menlo,Consolas,monospace;font-size:10px;color:#8A8672;letter-spacing:.05em}
+.w.on{background:#1B365D;border-color:#1B365D}
+.w.on span{color:#F5F1E6}
+.w.on:after{content:"✓";position:absolute;right:3px;bottom:1px;font-size:9px;color:#C0392B}
+#prog{font-size:12px;color:#666;margin-top:10px;font-family:Menlo,Consolas,monospace}
+.pcard{max-width:680px;margin:46px auto 0;padding:0 22px 6px}
+.pcard h3{font-size:21px;color:#1B365D;margin:6px 0 2px}
+.pcard .en{font-size:10.5px;letter-spacing:.25em;color:#8A6A2C;font-family:Menlo,Consolas,monospace}
+.pcard .desc{font-size:13.5px;color:#555;margin:6px 0 0}
+.sect{max-width:680px;margin:18px auto 0;padding:0 22px}
+.card{background:#FBF8EE;border:1px solid #C9BB8A;border-radius:6px;overflow:hidden;position:relative;margin-bottom:14px;box-shadow:0 1px 3px rgba(27,54,93,.08)}
+.bp{display:flex;padding:13px 16px 11px;cursor:pointer}
+.bp .left{min-width:0;flex:1}
+.bp .fl{font-size:9.5px;font-family:Menlo,Consolas,monospace;letter-spacing:.18em;color:#8A6A2C}
+.bp .zh{font-size:17px;color:#1B365D;margin:1px 0 2px}
+.bp .no{font-size:10.5px;color:#999;font-family:Menlo,Consolas,monospace}
+.bp .right{display:flex;align-items:center;justify-content:flex-end;padding-left:10px}
+.qr{width:34px;height:34px;border:1px solid #C9BB8A;border-radius:3px;background:repeating-linear-gradient(90deg,#1B365D 0 2px,transparent 2px 4px,#1B365D 4px 5px,transparent 5px 8px)}
+.stamp{position:absolute;right:56px;top:9px;transform:rotate(-14deg);border:2px solid #C0392B;color:#C0392B;border-radius:4px;padding:2px 7px;font-family:Menlo,Consolas,monospace;font-size:10.5px;letter-spacing:.14em;opacity:0;pointer-events:none;transition:opacity .3s}
+.card.on .stamp{opacity:.92}
+.detail{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.detail .in{padding:4px 16px 15px;border-top:1px dashed #C9BB8A;margin:0 0}
+.detail .sects{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 2px}
+.sects span{font-size:10.5px;color:#1B365D;background:#E8E2CC;border-radius:2px;padding:2px 8px}
+.detail p{font-size:14px;color:#333;margin-top:10px}
+.how{margin-top:10px;font-size:13px;color:#1B365D;background:#EDE7D2;border-radius:3px;padding:8px 11px}
+.how b{color:#8A6A2C;font-size:10px;letter-spacing:.2em;font-family:Menlo,Consolas,monospace;display:block;margin-bottom:3px}
+.act{padding:0 16px 15px;display:flex;gap:8px}
+button{flex:1;border:1.5px solid #1B365D;background:#1B365D;color:#F5F1E6;border-radius:3px;padding:10px;font-size:14px;font-family:inherit;cursor:pointer}
+.card.on button{background:transparent;color:#1B365D}
+#quote{max-width:680px;margin:52px auto 0;padding:0 22px}
+#quote h2{font-size:12px;letter-spacing:.3em;color:#8A6A2C;font-family:Menlo,Consolas,monospace;margin-bottom:14px}
+.q{background:#FBF8EE;border:1px solid #C9BB8A;border-radius:6px;padding:18px 18px 15px;margin-bottom:12px;position:relative}
+.q p{font-size:16px;color:#1B365D;line-height:1.7}
+.q .who{font-size:11px;color:#888;margin-top:8px;font-family:Menlo,Consolas,monospace;letter-spacing:.1em}
+#honest{max-width:680px;margin:48px auto 0;padding:0 22px;font-size:12.5px;color:#777;line-height:1.9;border-top:1px solid #D8CDA8;padding-top:18px}
+#honest b{color:#555}
+#honest li{margin-left:18px;margin-bottom:3px}
+#final{max-width:680px;margin:30px auto 60px;padding:0 22px;opacity:0;transform:translateY(12px);transition:all .6s}
+#final.show{opacity:1;transform:none}
+.fin{background:#1B365D;color:#F5F1E6;border-radius:6px;padding:34px 22px;text-align:center;position:relative;overflow:hidden}
+.fin:before{content:"";position:absolute;inset:7px;border:1px solid rgba(201,162,39,.5);border-radius:3px}
+.fin .a{font-size:30px;letter-spacing:.22em;font-family:Menlo,Consolas,monospace;color:#C9A227}
+.fin .b{font-size:14px;margin-top:8px;color:#D9E2EF}
+.fin .c{font-size:12.5px;margin-top:14px;color:#B9C7DB;font-style:italic}
+.fin .seal{margin:22px auto 0;width:110px;height:110px;border:2.5px solid #C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;transform:rotate(-9deg)}
+.fin .seal .s1{font-family:Menlo,Consolas,monospace;font-size:12px;letter-spacing:.2em;color:#C0392B}
+.fin .seal .s2{font-size:15px;color:#C0392B;margin-top:2px}
+footer{max-width:680px;margin:0 auto;padding:0 22px 60px;font-size:11px;color:#999;text-align:center;line-height:1.9}
+#toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:34px;background:#1B365D;color:#F5F1E6;padding:9px 18px;border-radius:3px;font-size:13px;opacity:0;transition:all .3s;pointer-events:none;font-family:Menlo,Consolas,monospace;letter-spacing:.05em}
+#toast.show{opacity:1;transform:translateX(-50%)}
+@media(max-width:420px){h1{font-size:40px}#wall{grid-template-columns:repeat(8,1fr)}}
+</style>
+</head>
+<body>
+<div id="top">
+ <div class="eyebrow">BOARDING PASS · 数字游民全球创业指南</div>
+ <h1>fireboss.</h1>
+ <div class="sub"><b>白手起家</b>——马特·莫里斯的全球创业飞行手册</div>
+ <div class="rule"></div>
+ <div class="meta">THE UNEMPLOYED MILLIONAIRE · WILEY 2009 · 人大社中文版 2013 · 16 章</div>
+ <p class="lede">「21 岁睡在车窗漏风的本田思域后座，29 岁成为百万富翁，生意遍及 190 个国家。」16 个航段读完盖章登机——终点不是钱，是「按你自己的方式生活」。</p>
+</div>
+<div class="numbers">
+ <div class="num"><div class="v">21</div><div class="k">岁谷底·负债3万刀</div></div>
+ <div class="num"><div class="v">29</div><div class="k">岁百万富翁</div></div>
+ <div class="num"><div class="v">190</div><div class="k">国家·生意版图</div></div>
+ <div class="num"><div class="v">$2000万</div><div class="k">公司年收入</div></div>
+</div>
+<div id="wallwrap">
+ <h2>BOARDING WALL · 登机墙</h2>
+ <div id="wall"></div>
+ <div id="prog">BOARDED 0 / 16</div>
+</div>
+<div id="list">
+<div class="pcard">
+ <div class="en mono">FB-100 · PART I / FOUNDATION</div>
+ <h3>第一部 · 打造坚实的财富基础</h3>
+ <p class="desc">信念、梦想、目标与行动管理——先修引擎，再上路</p>
+</div>
+<div class="sect" id="sec0">
+<div class="card" id="c0">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-01 · CHAPTER 01</div>
+   <div class="zh">我的故事</div>
+   <div class="no mono">GATE A01 · SEAT 01B</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>破产经历</span><span>跌到低谷</span><span>转折点</span><span>我的启示</span></div>
+  <p>18 岁上第一堂营销课，20 岁辍学经商，21 岁欠债三万美元、睡在车窗漏风的本田思域后座，在教堂停车场用暴雨冲澡。八年后的 29 岁，他是百万富翁。莫里斯把自己的至暗时刻当第一章——先让你看清：谷底不是终点，是转折点的坐标。他随后重建公司做到年收入超 2000 万美元、生意遍及 190 个国家。</p>
+  <div class="how"><b>HOW · 怎么做</b>把你最惨的那段经历写下来。别美化——它就是你故事的第一章。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(0)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c1">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-02 · CHAPTER 02</div>
+   <div class="zh">成为自由的百万富翁</div>
+   <div class="no mono">GATE A02 · SEAT 02C</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>时间与金钱</span></div>
+  <p>「失业的百万富翁」不是不工作，是把「时间」和「金钱」的位置换过来：打工者用时间换钱，上限是每天 24 小时；自由的百万富翁建系统，让钱和别人的时间为自己工作。莫里斯后来三周不进办公室、生意照转——因为他建的企业「不依赖于我」。自由=不在场时一切照常运转。</p>
+  <div class="how"><b>HOW · 怎么做</b>问一个问题：如果你连续两周不出现，你的收入会怎样？答案就是你的自由度。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(1)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c2">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-03 · CHAPTER 03</div>
+   <div class="zh">信念：简单的因素和谎言的力量</div>
+   <div class="no mono">GATE A03 · SEAT 03D</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>这比你想象的容易</span><span>控制你的思想</span><span>培养良好信念的三种途径</span><span>谎言的力量</span><span>一致性法则</span></div>
+  <p>莫里斯的核心论点：赚一百万不难，难的是「相信它会发生在自己身上」。信念决定你会不会开始、会不会坚持。他给了三个字的方法论：控制思想输入（别让怀疑者住进你脑子里）、重复（把目标说到自己相信）、一致性法则（所见所闻所行保持同向，拧巴的信念撑不久）。「谎言的力量」是争议章——自我暗示要当工具用，不是当事实用。</p>
+  <div class="how"><b>HOW · 怎么做</b>列出三个关于钱的旧信念（如「我不配」），旁边写三个替换句。每天读一遍。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(2)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c3">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-04 · CHAPTER 04</div>
+   <div class="zh">有梦想才有作为</div>
+   <div class="no mono">GATE A04 · SEAT 04E</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>梦想是点燃欲望之火的燃料</span><span>成功孕育成功</span><span>不要总是「试试」</span><span>创建你的人生梦想清单</span></div>
+  <p>「试试」是个逃生词——它预设了失败。莫里斯要求直接「做」。梦想清单不是愿望清单：写下来、具体化、反复看，让欲望保持温度。成功是复利：每个小赢都在给下一个壮胆。这一章是第 3 章的燃料库——信念需要材料。</p>
+  <div class="how"><b>HOW · 怎么做</b>今晚写 100 件人生梦想清单。写到第 40 条以后，真话才开始出现。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(3)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c4">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-05 · CHAPTER 05</div>
+   <div class="zh">失败者才设定目标</div>
+   <div class="no mono">GATE A05 · SEAT 05F</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>设定具体的目标</span><span>寻求具体目标背后的动机——你的目的</span><span>为实现具体的目标制定行动计划</span></div>
+  <p>全书标题最反直觉的一章。莫里斯不是说目标没用，是说「为达标而标」没用：空心的目标（赚一百万）撑不过三次挫折。结构是三层的：目标（具体的数字与期限）→动机（这个目标背后的「为什么」，即你的目的）→行动计划（每日动作）。动机才是引擎，目标只是路牌。</p>
+  <div class="how"><b>HOW · 怎么做</b>在每个目标下面追问三次「为什么」，直到问出那个让你眼眶发热的答案。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(4)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c5">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-06 · CHAPTER 06</div>
+   <div class="zh">迈向巅峰的行动管理</div>
+   <div class="no mono">GATE A06 · SEAT 06A</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>无意识的自我管理</span><span>像看电影一样观察自己</span><span>自由的百万富翁的行动管理模式</span></div>
+  <p>梦想清单负责方向，这章负责执行。方法出奇地简单：像看电影一样观察自己——把「我」和「我的行为」拉开距离，才能看见自己一天里多少动作是自动驾驶的（刷手机、拖延、伪工作）。看见即接管。莫里斯的模式：要事优先+每日复盘+只数产出不数工时。</p>
+  <div class="how"><b>HOW · 怎么做</b>今天结束时回放一次：哪三个动作真推进了目标？其余的删掉。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(5)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c6">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-100-07 · CHAPTER 07</div>
+   <div class="zh">世界上最具影响力人物的神秘特质</div>
+   <div class="no mono">GATE A07 · SEAT 07B</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>领导力法则</span><span>世界上最成功人士的神秘个性特征</span></div>
+  <p>财富基础篇收官：单人做到上限，靠团队破上限。莫里斯观察到顶尖人物的共性不是口才或聪明，而是让人愿意跟随的真实与确定感——领导力不是职位给的，是能量场的溢出。这章也悄悄预告了第 14 章：他后来最赚钱的动作，全是靠「关系中的领导力」完成的。</p>
+  <div class="how"><b>HOW · 怎么做</b>回忆一个你真心愿意跟随的人。写下他让你信服的三个瞬间。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(6)">登机 BOARDED</button></div>
+</div>
+</div>
+<div class="pcard">
+ <div class="en mono">FB-200 · PART II / THE ROAD</div>
+ <h3>第二部 · 成为百万富翁之路</h3>
+ <p class="desc">创业模式、效仿天才、网络营销、互联网与地产——选你的航线</p>
+</div>
+<div class="sect" id="sec1">
+<div class="card" id="c7">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-200-08 · CHAPTER 08</div>
+   <div class="zh">开始你的创业之路</div>
+   <div class="no mono">GATE B08 · SEAT 08C</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>误区</span><span>跟随你的热情</span><span>开始行动</span><span>要么冒险，要么危险</span><span>掌握自己的命运</span></div>
+  <p>百万之路第一课。「跟随你的热情」被莫里斯半信半疑地引用——热情必要但不充分，还要有人买单。真正的分水岭是「要么冒险，要么危险」：不创业的风险（被裁员、被动一辈子）其实大于创业的风险，只是它不一次性到账，而按月分期支付。掌握命运=自己做决定并承担后果。</p>
+  <div class="how"><b>HOW · 怎么做</b>把「万一失败」改写成「最坏会发生什么」。写出来，它通常小于你的想象。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(7)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c8">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-200-09 · CHAPTER 09</div>
+   <div class="zh">当你可以效仿天才时，何苦做个普通人？</div>
+   <div class="no mono">GATE B09 · SEAT 09D</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>模式</span><span>如何应对竞争</span><span>谁在竞争，竞争什么，怎样竞争</span><span>独特的销售主张</span></div>
+  <p>别发明轮子，先找到已被验证的模式（modeling）。莫里斯创业的起点就是研究别人的成功路径然后跑同一条路。竞争策略：不打同一个赛道——用 USP（独特销售主张）错位：同样的生意，换个角度就是蓝海。你的与众不同不需要巨大，需要清晰到一句话说得完。</p>
+  <div class="how"><b>HOW · 怎么做</b>找到你领域里做得最好的三个人，研究他们的路径。写下你的那一句 USP。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(8)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c9">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-200-10 · CHAPTER 10</div>
+   <div class="zh">最具时间效益的生意</div>
+   <div class="no mono">GATE B10 · SEAT 10E</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>应对当前的经济危机</span><span>社交网络营销基础</span><span>播种期</span><span>易进易出</span><span>寻找一个社交网络营销公司</span><span>避免错误</span><span>要寻求什么</span></div>
+  <p>全书争议中心，如实说：莫里斯本人发家于社交网络营销（直销/网络营销行业），这章他把这个模式推销为「低门槛高杠杆」的选择——易进易出、少员工、系统现成。他同时给了筛选标准（产品真实、复购属性、公司诚信记录、上下线合理）。诚实提示：这个行业成功率与口碑两极分化，把他给的 checklist 当避坑指南用，比当机会清单用更安全。</p>
+  <div class="how"><b>HOW · 怎么做</b>若有人拉你做直销，先过他这七条 checklist。过不了，微笑离场。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(9)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c10">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-200-11 · CHAPTER 11</div>
+   <div class="zh">互联网营销</div>
+   <div class="no mono">GATE B11 · SEAT 11F</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>如何在网上用一个星期赚到你人生中的第一笔钱</span><span>在线拍卖</span><span>建立你自己的网站</span><span>联属网络营销</span><span>搜索引擎最优化</span><span>文章营销</span><span>电子邮件简讯</span><span>真正的财富在列表清单中</span><span>和列表清单上的人像约会一样保持联系</span></div>
+  <p>技术章、也是全书干货密度最高的一章：拍卖清库存起步→建站→联属营销（替别人卖货拿佣金）→SEO 与内容营销→邮件列表。核心金句提前十几年说透了创作者经济：「真正的财富在列表清单中」——粉丝在平台手里，列表在你手里。维护方式是「像约会一样」：不是群发广告，是持续给价值。</p>
+  <div class="how"><b>HOW · 怎么做</b>本周开始攒你的列表：一个邮箱+一份固定的有用内容，哪怕是每周一封信。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(10)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c11">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-200-12 · CHAPTER 12</div>
+   <div class="zh">地产投资</div>
+   <div class="no mono">GATE B12 · SEAT 12A</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>地产投资原则第一位</span><span>如何以批发价购买地产</span><span>讨价还价的力量</span><span>利用衰退期，使其成为你的优势</span><span>迅速换手和出租地产</span><span>先租后买的租赁选择</span><span>不必预先支付的技巧</span></div>
+  <p>出版于 2008 金融危机后，这章的时代烙印很深：莫里斯讲「衰退是买方的朋友」——批发价拿房、快进快出或租赁覆盖月供、先租后买控制产权而不占用资金。「不必预先支付的技巧」是精髓也是风险所在：零首付=高杠杆=双向放大。非投资建议：时代变了，利率与规则都变了，读思想别照抄数字。</p>
+  <div class="how"><b>HOW · 怎么做</b>学他的谈判观：每次报价都给出离场选项。敢走，才有价格。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(11)">登机 BOARDED</button></div>
+</div>
+</div>
+<div class="pcard">
+ <div class="en mono">FB-300 · PART III / SCALE</div>
+ <h3>第三部 · 管理并扩大你的生意</h3>
+ <p class="desc">外包、联营、竞争与最后的思考——让生意离得开你</p>
+</div>
+<div class="sect" id="sec2">
+<div class="card" id="c12">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-300-13 · CHAPTER 13</div>
+   <div class="zh">压力释放和管理系统</div>
+   <div class="no mono">GATE C13 · SEAT 13B</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>管理员工</span><span>简单的三步管理模式</span><span>外包业务</span><span>虚拟助理的魔力</span><span>这值得吗</span></div>
+  <p>系统篇第一课：你不想做的每件事，都是别人的专业。莫里斯的三步模式（定义结果→定人→放手）核心在第三步——多数创业者死在「不放心」上。虚拟助理（VA）是数字游民老朋友：把邮件、日程、客服外包出去，用地理差价获得时间差价。「这值得吗」的算法：你的小时价值 × 省下的小时 ＞ 外包成本，就签。</p>
+  <div class="how"><b>HOW · 怎么做</b>列出你上周最烦的三件杂务。今天就找 VA 或工具替掉一件。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(12)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c13">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-300-14 · CHAPTER 14</div>
+   <div class="zh">通过联营合作把你的营销外包出去</div>
+   <div class="no mono">GATE C14 · SEAT 14C</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>3 个联营合作伙伴每人为我赚了不下 100 万美元</span><span>关注 WIIFM</span><span>招募联营合作伙伴的法则</span><span>关系中自有「黄金屋」</span><span>在不到 6 个月的时间里，我是如何把 70 美元变成 15000 美元的</span></div>
+  <p>联合营销（JV/联营）：让卖东西比你强的人替你卖，佣金结盟。金句级案例：三个联营伙伴每人给他带来一百万美元以上。两个钥匙——WIIFM（对方广播里永远放的是 What's In It For Me：先算他能得到什么）+ 长期关系账户（先存交情，再谈合作）。70 美元变 15000 美元的实验值得细读：小成本试关系，跑通了再放大。</p>
+  <div class="how"><b>HOW · 怎么做</b>列出五个「有流量没产品」的人，和一个「有产品没流量」的你。中间那座桥就是钱。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(13)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c14">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-300-15 · CHAPTER 15</div>
+   <div class="zh">赢得竞争的五个策略</div>
+   <div class="no mono">GATE C15 · SEAT 15D</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  <div class="sects"><span>策略一：差异化</span><span>策略二：卓越的客服</span><span>策略三：成为专家</span><span>策略四：与竞争对手合作</span><span>策略五：客户终身价值</span></div>
+  <p>小节名按内容归纳（原目录只标五个策略）。五个策略的共同点：不打价格战。差异化（USP 的执行）、客服（把投诉当免费的咨询与公关）、专家定位（写、讲、教——免费帮人就是最便宜的广告）、化敌为友（竞合）、客户终身价值（算 LTV 而不是单笔毛利，敢在获客上花钱）。适合一人公司直接抄。</p>
+  <div class="how"><b>HOW · 怎么做</b>算你一个客户的终身价值 LTV。算完你会发现：今天的获客预算其实花少了。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(14)">登机 BOARDED</button></div>
+</div>
+<div class="card" id="c15">
+ <div class="bp">
+  <div class="left">
+   <div class="fl mono">FLIGHT FB-300-16 · CHAPTER 16</div>
+   <div class="zh">最后的思考</div>
+   <div class="no mono">GATE C16 · SEAT 16E</div>
+  </div>
+  <div class="right"><div class="qr"></div></div>
+ </div>
+ <div class="stamp">BOARDED</div>
+ <div class="detail"><div class="in">
+  
+  <p>没有新招式，只有老实话：财富是副产品，自由才是主产品——「按你自己的方式生活」（Live Life on YOUR Terms）才是书名的落点。莫里斯的路径图到站：谷底→信念→梦想→目标→行动→系统→全球生意→自由。他也坦白这条路不快、不神秘、不适合所有人。最后一问留给读者：你想要的是钱，还是钱买回来的时间？</p>
+  <div class="how"><b>HOW · 怎么做</b>合上手机前回答他这最后一问。你的答案决定前面十五章怎么读。</div>
+ </div></div>
+ <div class="act"><button onclick="mark(15)">登机 BOARDED</button></div>
+</div>
+</div>
+</div>
+<div id="quote">
+ <h2>引语 · QUOTES</h2>
+ <div class="q"><p>你生活中唯一的限制，是你心中的信念。</p><div class="who">—— 马特·莫里斯</div></div>
+ <div class="q"><p>赚一百万是我曾做过最简单的一件事。相信这件事会发生在我身上，却是最难的一件事。</p><div class="who">—— 马特·莫里斯</div></div>
+ <div class="q"><p>我相信《白手起家》将成为改变生活的杰作。和我一样，和数以百万的人一样，开始阅读这本书吧。</p><div class="who">—— 莱斯·布朗（本书序作者）</div></div>
+</div>
+<div id="honest">
+ <b>数据与出处（诚实标注）</b>
+ <ul>
+  <li>书名说明：常被介绍作「数字游民全球创业」类指南的这本书，官方中文版书名《白手起家》（马特·莫里斯著，张晶译，中国人民大学出版社 2013，ISBN 978-7-300-16904-0），原作 <i>The Unemployed Millionaire: Escape the Rat Race, Fire Your Boss and Live Life on YOUR Terms!</i>（Wiley，2009）。</li>
+  <li>16 章目录与各章小节：出版社官网新书页+百科词条双源实锤；第 15 章五个策略小节名为按内容归纳。本站细讲为导读式阐释，非原文摘录；「作者 21/29 岁、190 国、$2000 万、$30,000 债务」等数字为出版社与原书官方简介实锤。</li>
+  <li>诚实提示：本书核心生意模式含社交网络营销（直销）与地产高杠杆策略，业内评价两极分化。读思想（信念/系统/外包/联营）远比照抄生意模式更有价值。本站非投资、非商业建议。</li>
+ </ul>
+</div>
+<div id="final">
+ <div class="fin">
+  <div class="a">ARRIVED</div>
+  <div class="b">16 航段全部登机完毕</div>
+  <div class="c">Escape the rat race. Fire your boss. Live life on YOUR terms.</div>
+  <div class="seal"><div class="s1">IMMIGRATION</div><div class="s2">自由 · 抵达</div></div>
+ </div>
+</div>
+<footer>fireboss. · 白手起家全书导读 · 原作 THE UNEMPLOYED MILLIONAIRE<br>FAN-MADE STUDY GUIDE · NOT AFFILIATED · 非投资建议</footer>
+<div id="toast"></div>
+<script>
+var C=[{"no": 1, "part": 0, "zh": "我的故事", "sects": ["破产经历", "跌到低谷", "转折点", "我的启示"], "body": "18 岁上第一堂营销课，20 岁辍学经商，21 岁欠债三万美元、睡在车窗漏风的本田思域后座，在教堂停车场用暴雨冲澡。八年后的 29 岁，他是百万富翁。莫里斯把自己的至暗时刻当第一章——先让你看清：谷底不是终点，是转折点的坐标。他随后重建公司做到年收入超 2000 万美元、生意遍及 190 个国家。", "how": "把你最惨的那段经历写下来。别美化——它就是你故事的第一章。"}, {"no": 2, "part": 0, "zh": "成为自由的百万富翁", "sects": ["时间与金钱"], "body": "「失业的百万富翁」不是不工作，是把「时间」和「金钱」的位置换过来：打工者用时间换钱，上限是每天 24 小时；自由的百万富翁建系统，让钱和别人的时间为自己工作。莫里斯后来三周不进办公室、生意照转——因为他建的企业「不依赖于我」。自由=不在场时一切照常运转。", "how": "问一个问题：如果你连续两周不出现，你的收入会怎样？答案就是你的自由度。"}, {"no": 3, "part": 0, "zh": "信念：简单的因素和谎言的力量", "sects": ["这比你想象的容易", "控制你的思想", "培养良好信念的三种途径", "谎言的力量", "一致性法则"], "body": "莫里斯的核心论点：赚一百万不难，难的是「相信它会发生在自己身上」。信念决定你会不会开始、会不会坚持。他给了三个字的方法论：控制思想输入（别让怀疑者住进你脑子里）、重复（把目标说到自己相信）、一致性法则（所见所闻所行保持同向，拧巴的信念撑不久）。「谎言的力量」是争议章——自我暗示要当工具用，不是当事实用。", "how": "列出三个关于钱的旧信念（如「我不配」），旁边写三个替换句。每天读一遍。"}, {"no": 4, "part": 0, "zh": "有梦想才有作为", "sects": ["梦想是点燃欲望之火的燃料", "成功孕育成功", "不要总是「试试」", "创建你的人生梦想清单"], "body": "「试试」是个逃生词——它预设了失败。莫里斯要求直接「做」。梦想清单不是愿望清单：写下来、具体化、反复看，让欲望保持温度。成功是复利：每个小赢都在给下一个壮胆。这一章是第 3 章的燃料库——信念需要材料。", "how": "今晚写 100 件人生梦想清单。写到第 40 条以后，真话才开始出现。"}, {"no": 5, "part": 0, "zh": "失败者才设定目标", "sects": ["设定具体的目标", "寻求具体目标背后的动机——你的目的", "为实现具体的目标制定行动计划"], "body": "全书标题最反直觉的一章。莫里斯不是说目标没用，是说「为达标而标」没用：空心的目标（赚一百万）撑不过三次挫折。结构是三层的：目标（具体的数字与期限）→动机（这个目标背后的「为什么」，即你的目的）→行动计划（每日动作）。动机才是引擎，目标只是路牌。", "how": "在每个目标下面追问三次「为什么」，直到问出那个让你眼眶发热的答案。"}, {"no": 6, "part": 0, "zh": "迈向巅峰的行动管理", "sects": ["无意识的自我管理", "像看电影一样观察自己", "自由的百万富翁的行动管理模式"], "body": "梦想清单负责方向，这章负责执行。方法出奇地简单：像看电影一样观察自己——把「我」和「我的行为」拉开距离，才能看见自己一天里多少动作是自动驾驶的（刷手机、拖延、伪工作）。看见即接管。莫里斯的模式：要事优先+每日复盘+只数产出不数工时。", "how": "今天结束时回放一次：哪三个动作真推进了目标？其余的删掉。"}, {"no": 7, "part": 0, "zh": "世界上最具影响力人物的神秘特质", "sects": ["领导力法则", "世界上最成功人士的神秘个性特征"], "body": "财富基础篇收官：单人做到上限，靠团队破上限。莫里斯观察到顶尖人物的共性不是口才或聪明，而是让人愿意跟随的真实与确定感——领导力不是职位给的，是能量场的溢出。这章也悄悄预告了第 14 章：他后来最赚钱的动作，全是靠「关系中的领导力」完成的。", "how": "回忆一个你真心愿意跟随的人。写下他让你信服的三个瞬间。"}, {"no": 8, "part": 1, "zh": "开始你的创业之路", "sects": ["误区", "跟随你的热情", "开始行动", "要么冒险，要么危险", "掌握自己的命运"], "body": "百万之路第一课。「跟随你的热情」被莫里斯半信半疑地引用——热情必要但不充分，还要有人买单。真正的分水岭是「要么冒险，要么危险」：不创业的风险（被裁员、被动一辈子）其实大于创业的风险，只是它不一次性到账，而按月分期支付。掌握命运=自己做决定并承担后果。", "how": "把「万一失败」改写成「最坏会发生什么」。写出来，它通常小于你的想象。"}, {"no": 9, "part": 1, "zh": "当你可以效仿天才时，何苦做个普通人？", "sects": ["模式", "如何应对竞争", "谁在竞争，竞争什么，怎样竞争", "独特的销售主张"], "body": "别发明轮子，先找到已被验证的模式（modeling）。莫里斯创业的起点就是研究别人的成功路径然后跑同一条路。竞争策略：不打同一个赛道——用 USP（独特销售主张）错位：同样的生意，换个角度就是蓝海。你的与众不同不需要巨大，需要清晰到一句话说得完。", "how": "找到你领域里做得最好的三个人，研究他们的路径。写下你的那一句 USP。"}, {"no": 10, "part": 1, "zh": "最具时间效益的生意", "sects": ["应对当前的经济危机", "社交网络营销基础", "播种期", "易进易出", "寻找一个社交网络营销公司", "避免错误", "要寻求什么"], "body": "全书争议中心，如实说：莫里斯本人发家于社交网络营销（直销/网络营销行业），这章他把这个模式推销为「低门槛高杠杆」的选择——易进易出、少员工、系统现成。他同时给了筛选标准（产品真实、复购属性、公司诚信记录、上下线合理）。诚实提示：这个行业成功率与口碑两极分化，把他给的 checklist 当避坑指南用，比当机会清单用更安全。", "how": "若有人拉你做直销，先过他这七条 checklist。过不了，微笑离场。"}, {"no": 11, "part": 1, "zh": "互联网营销", "sects": ["如何在网上用一个星期赚到你人生中的第一笔钱", "在线拍卖", "建立你自己的网站", "联属网络营销", "搜索引擎最优化", "文章营销", "电子邮件简讯", "真正的财富在列表清单中", "和列表清单上的人像约会一样保持联系"], "body": "技术章、也是全书干货密度最高的一章：拍卖清库存起步→建站→联属营销（替别人卖货拿佣金）→SEO 与内容营销→邮件列表。核心金句提前十几年说透了创作者经济：「真正的财富在列表清单中」——粉丝在平台手里，列表在你手里。维护方式是「像约会一样」：不是群发广告，是持续给价值。", "how": "本周开始攒你的列表：一个邮箱+一份固定的有用内容，哪怕是每周一封信。"}, {"no": 12, "part": 1, "zh": "地产投资", "sects": ["地产投资原则第一位", "如何以批发价购买地产", "讨价还价的力量", "利用衰退期，使其成为你的优势", "迅速换手和出租地产", "先租后买的租赁选择", "不必预先支付的技巧"], "body": "出版于 2008 金融危机后，这章的时代烙印很深：莫里斯讲「衰退是买方的朋友」——批发价拿房、快进快出或租赁覆盖月供、先租后买控制产权而不占用资金。「不必预先支付的技巧」是精髓也是风险所在：零首付=高杠杆=双向放大。非投资建议：时代变了，利率与规则都变了，读思想别照抄数字。", "how": "学他的谈判观：每次报价都给出离场选项。敢走，才有价格。"}, {"no": 13, "part": 2, "zh": "压力释放和管理系统", "sects": ["管理员工", "简单的三步管理模式", "外包业务", "虚拟助理的魔力", "这值得吗"], "body": "系统篇第一课：你不想做的每件事，都是别人的专业。莫里斯的三步模式（定义结果→定人→放手）核心在第三步——多数创业者死在「不放心」上。虚拟助理（VA）是数字游民老朋友：把邮件、日程、客服外包出去，用地理差价获得时间差价。「这值得吗」的算法：你的小时价值 × 省下的小时 ＞ 外包成本，就签。", "how": "列出你上周最烦的三件杂务。今天就找 VA 或工具替掉一件。"}, {"no": 14, "part": 2, "zh": "通过联营合作把你的营销外包出去", "sects": ["3 个联营合作伙伴每人为我赚了不下 100 万美元", "关注 WIIFM", "招募联营合作伙伴的法则", "关系中自有「黄金屋」", "在不到 6 个月的时间里，我是如何把 70 美元变成 15000 美元的"], "body": "联合营销（JV/联营）：让卖东西比你强的人替你卖，佣金结盟。金句级案例：三个联营伙伴每人给他带来一百万美元以上。两个钥匙——WIIFM（对方广播里永远放的是 What's In It For Me：先算他能得到什么）+ 长期关系账户（先存交情，再谈合作）。70 美元变 15000 美元的实验值得细读：小成本试关系，跑通了再放大。", "how": "列出五个「有流量没产品」的人，和一个「有产品没流量」的你。中间那座桥就是钱。"}, {"no": 15, "part": 2, "zh": "赢得竞争的五个策略", "sects": ["策略一：差异化", "策略二：卓越的客服", "策略三：成为专家", "策略四：与竞争对手合作", "策略五：客户终身价值"], "body": "小节名按内容归纳（原目录只标五个策略）。五个策略的共同点：不打价格战。差异化（USP 的执行）、客服（把投诉当免费的咨询与公关）、专家定位（写、讲、教——免费帮人就是最便宜的广告）、化敌为友（竞合）、客户终身价值（算 LTV 而不是单笔毛利，敢在获客上花钱）。适合一人公司直接抄。", "how": "算你一个客户的终身价值 LTV。算完你会发现：今天的获客预算其实花少了。"}, {"no": 16, "part": 2, "zh": "最后的思考", "sects": [], "body": "没有新招式，只有老实话：财富是副产品，自由才是主产品——「按你自己的方式生活」（Live Life on YOUR Terms）才是书名的落点。莫里斯的路径图到站：谷底→信念→梦想→目标→行动→系统→全球生意→自由。他也坦白这条路不快、不神秘、不适合所有人。最后一问留给读者：你想要的是钱，还是钱买回来的时间？", "how": "合上手机前回答他这最后一问。你的答案决定前面十五章怎么读。"}],P=[{"zh": "第一部 · 打造坚实的财富基础", "en": "PART I / FOUNDATION", "desc": "信念、梦想、目标与行动管理——先修引擎，再上路", "flight": "FB-100"}, {"zh": "第二部 · 成为百万富翁之路", "en": "PART II / THE ROAD", "desc": "创业模式、效仿天才、网络营销、互联网与地产——选你的航线", "flight": "FB-200"}, {"zh": "第三部 · 管理并扩大你的生意", "en": "PART III / SCALE", "desc": "外包、联营、竞争与最后的思考——让生意离得开你", "flight": "FB-300"}],KEY='fireboss_log';
+try{var lit=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){var lit=[]}
+function save(){localStorage.setItem(KEY,JSON.stringify(lit))}
+function isLit(i){return lit.indexOf(i)>=0}
+function renderWall(){
+ var w=document.getElementById('wall');w.innerHTML='';
+ for(var i=0;i<16;i++){
+  var d=document.createElement('div');
+  d.className='w'+(isLit(i)?' on':'');
+  d.innerHTML='<span>'+String(i+1).padStart(2,'0')+'</span>';
+  d.onclick=function(ev){openCard((+ev.currentTarget.dataset.i),ev)};
+  d.dataset.i=i;w.appendChild(d);
+ }
+ var on=lit.length;
+ document.getElementById('prog').textContent='BOARDED '+on+' / 16';
+}
+function renderList(){
+ for(var pi=0;pi<3;pi++){
+  var l=document.getElementById('sec'+pi);
+  for(var ii=0;ii<16;ii++){var i=ii;if(C[i].part!==pi)continue;(function(i){
+   var c=document.getElementById('c'+i);
+   c.className='card'+(isLit(i)?' on':'');
+   c.querySelector('.bp').onclick=function(ev){toggle(i,ev)};
+   c.querySelector('.detail').style.maxHeight=c.querySelector('.detail').classList.contains('open')?'800px':'0';
+  })(i);}
+ }
+}
+function toggle(i,ev){
+ var c=document.getElementById('c'+i),d=c.querySelector('.detail');
+ if(d.classList.contains('open')){d.classList.remove('open');d.style.maxHeight='0'}
+ else{d.classList.add('open');d.style.maxHeight='800px'}
+}
+function openCard(i,ev){
+ var c=document.getElementById('c'+i);
+ toggle(i,ev);
+}
+function mark(i){
+ if(isLit(i)){
+  lit.splice(lit.indexOf(i),1);save();renderWall();renderList();
+  document.getElementById('final').classList.remove('show');
+  toast('航段 '+(i+1)+' 已取消登机');return;
+ }
+ lit.push(i);save();renderWall();renderList();
+ toast('FLIGHT '+(i+1<10?'0':'')+(i+1)+' · BOARDED ✓');
+ if(lit.length===16){
+  setTimeout(function(){document.getElementById('final').classList.add('show')},400);
+  setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},900);
+ }
+}
+var tt;
+function toast(s){var t=document.getElementById('toast');t.textContent=s;t.classList.add('show');
+ clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},2000)}
+renderWall();renderList();
+if(lit.length===16){document.getElementById('final').classList.add('show')}
+</script>
+</body>
+</html>
